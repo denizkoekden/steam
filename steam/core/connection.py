@@ -233,7 +233,9 @@ class WebsocketConnection(Connection):
                     return
                 
                 logger.debug("Received {} bytes".format(len(data)))
-                self.ws.receive_data(data)
+                self._readbuf += data
+                self.ws.receive_data(self._readbuf)
+                self._readbuf = b''
                 self._handle_events()
     
     def _handle_events(self):
